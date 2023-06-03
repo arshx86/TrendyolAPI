@@ -47,6 +47,7 @@ foreach (AResult address in client.Addresses.Sonuc)
 
 ### Bilinen Sorunlar
 * 2 faktör desteklenmiyor.
+* Kod karışık. Tüm cleanup requestlerine açığım.
 * Kayıtlı kartlara erişim henüz desteklenmiyor. [BUG/1]
 * Proje 2021'de yapıldı, bazı yerlerde sıkıntılar, hatalar mevcut olabilir. Issues kısmından bildirebilirsiniz.
 * Proje, Trendyol Rest API'sini öğrenmek amacıyla yapıldı, bu library ile kötü anlamda yapabileceğin hiç bir şeyden ben sorumlu değilim.
