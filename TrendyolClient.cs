@@ -1,9 +1,4 @@
-﻿#region Assembly YWallet, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// C:\Users\kurt\Downloads\trendyollll(1)\trendyollll\bin\Debug\YWallet.dll
-// Decompiled with ICSharpCode.Decompiler 7.1.0.6543
-#endregion
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +14,7 @@ namespace TrendyolAPI
 
         private readonly string __password;
 
-        public Hesap Hesap;
+        public Account Account;
 
         public Address Addresses;
 
@@ -33,7 +28,6 @@ namespace TrendyolAPI
 
         public WalletClient(string Email, string Password, string Proxy = null)
         {
-
             HttpRequest httpRequest = new HttpRequest
             {
                 KeepAliveTimeout = 7000,
@@ -68,7 +62,6 @@ namespace TrendyolAPI
             });
             HttpResponse httpResponse = httpRequest.Post("https://auth.trendyol.com/login", str, "application/json;charset=UTF-8");
             string text = httpResponse.ToString();
-
             if (text.Contains("E-posta adresiniz ve/veya şifreniz hatalı."))
             {
                 throw new Exception("Invalid email or password.");
@@ -98,7 +91,7 @@ namespace TrendyolAPI
             httpRequest.AddHeader("sec-fetch-site", "same-site");
             httpRequest.AddHeader("sec-gpc", "1");
             httpRequest.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.102 Safari/537.36");
-            //Cards = JsonConvert.DeserializeObject<List<Card>>(httpRequest.Get("https://public-sdc.trendyol.com/discovery-web-accountgw-service/api/saved-credit-cards").ToString());
+            // Cards = JsonConvert.DeserializeObject<List<Card>>(httpRequest.Get("https://public-sdc.trendyol.com/discovery-web-accountgw-service/api/saved-credit-cards").ToString());
             string text3 = httpRequest.Get("https://public-sdc.trendyol.com/discovery-web-walletgw-service/fragment/hesabim/cuzdanim?culture=tr-TR&storefrontId=1").ToString();
             WalletBalance = Btw(text3, "{\\\"balance\\\":{\\\"amount\\\":", ",\\\"rebateAmount\\\"");
             Purchases = JsonConvert.DeserializeObject<Purchases>(httpRequest.Get("https://public-sdc.trendyol.com/discovery-web-omsgw-service/orders?page=1&sorting=0&storefrontId=1&searchText=").ToString());
@@ -108,10 +101,9 @@ namespace TrendyolAPI
             dynamic val = JsonConvert.DeserializeObject<object>(value);
             val = val["result"]["hydrateScript"].ToString();
             val = Btw(val, "['__USER_INFORMATION_APP_INITIAL_STATE__'] = ", "; window.T");
-            Hesap = JsonConvert.DeserializeObject<Hesap>(val);
+            Account = JsonConvert.DeserializeObject<Account>(val);
             __email = Email;
             __password = Password;
-
         }
 
         public override string ToString()
@@ -128,12 +120,12 @@ namespace TrendyolAPI
                 stringBuilder.Append($" | Cards ({Cards.Count})");
             }
 
-            if (Hesap.HesapBilgisi?.Email != null)
+            if (Account.UserInfo?.Email != null)
             {
                 stringBuilder.Append(" -Email Verified-");
             }
 
-            if (Hesap.HesapBilgisi?.Phone?.Number != null)
+            if (Account.UserInfo?.Phone?.Number != null)
             {
                 stringBuilder.Append(" -Number Verified-");
             }
@@ -144,9 +136,9 @@ namespace TrendyolAPI
         public string DetailedInfo()
         {
             StringBuilder stringBuilder = new StringBuilder();
-            if (!string.IsNullOrEmpty(Hesap.HesapBilgisi.FirstName))
+            if (!string.IsNullOrEmpty(Account.UserInfo.FirstName))
             {
-                stringBuilder.AppendLine("Isim > " + Hesap.HesapBilgisi.FirstName + " " + Hesap.HesapBilgisi.LastName);
+                stringBuilder.AppendLine("Name > " + Account.UserInfo.FirstName + " " + Account.UserInfo.LastName);
             }
 
             if (Cards.Count > 0)
@@ -154,9 +146,9 @@ namespace TrendyolAPI
                 stringBuilder.AppendLine(string.Format("Cards > {0} ({1})", Cards.Count, string.Join(", ", Cards.Select((Card x) => x.Name))));
             }
 
-            if (Hesap.HesapBilgisi?.Phone?.Number != null)
+            if (Account.UserInfo?.Phone?.Number != null)
             {
-                stringBuilder.AppendLine("Number > " + Hesap.HesapBilgisi?.Phone?.Number);
+                stringBuilder.AppendLine("Number > " + Account.UserInfo?.Phone?.Number);
             }
 
             if (!string.IsNullOrEmpty(WalletBalance))
@@ -164,10 +156,10 @@ namespace TrendyolAPI
                 stringBuilder.AppendLine("Balance > " + WalletBalance);
             }
 
-            List<AResult> result = Addresses.Sonuc;
+            List<AResult> result = Addresses.Result;
             if (result != null && result.Count > 0)
             {
-                stringBuilder.AppendLine("Addresses > " + string.Join(", ", Addresses.Sonuc.Select((AResult x) => x.AdresSatiri)));
+                stringBuilder.AppendLine("Addresses > " + string.Join(", ", Addresses.Result.Select((AResult x) => x.AddressLine)));
             }
 
             return stringBuilder.ToString();
