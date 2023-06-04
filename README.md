@@ -1,6 +1,6 @@
 # TrendyolAPI
 
-Trendyol API'si ile hesaba ait ödemeler, sipariş geçmişi, ürün geçmişi vs gibi şeylere erişmek için ihtiyacınz olan tek dll kütüphanesi.
+Trendyol API'si ile hesaba ait ödemeler, sipariş geçmişi, ürün geçmişi vs gibi şeylere erişmek için ihtiyacınz olan tek DLL kütüphanesi.
 
 ## Özellikler
 
@@ -17,7 +17,9 @@ DLL kütüphanesini .NET projene aktarıyosun.
 Email ve şifre ile hesaba giriş yapıyorsun.
 
 ```csharp
-WalletClient client = new WalletClient(mail, psw);
+using TrendyolAPI;
+...
+TrendyolClient client = new TrendyolClient(email, sifre);
 ```
 
 Hesaba giriş yaptıktan sonra **client** objesi ile istediğin şeylere erişebilirsin.
@@ -32,14 +34,14 @@ Hesaba giriş yaptıktan sonra **client** objesi ile istediğin şeylere erişeb
 
 ### Örnek: Hesap Bilgilerini Çekme
 ```csharp
-var hesapBilgisi = client.Account.Info;
+var hesapBilgisi = client.Account.UserInfo;
 Console.WriteLine($"Isim Soyisim: {hesapBilgisi.FirstName} {hesapBilgisi.LastName}");
 Console.WriteLine($"Telefon Numarası: {hesapBilgisi.Phone.Number}");
 ```
 
 ### Örnek: Adresleri Çekme
 ```csharp
-foreach (AResult address in client.Addresses.Sonuc)
+foreach (AResult address in wc.Addresses.Result)
 {
     Console.WriteLine($"{address.AddressName} / {address.AddressLine}");
 }
