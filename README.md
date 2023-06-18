@@ -49,8 +49,7 @@ foreach (AResult address in wc.Addresses.Result)
 
 ### Bilinen Sorunlar
 * 2 faktör desteklenmiyor.
-* Kod karışık. Tüm cleanup requestlerine açığım.
-* Kayıtlı kartlara erişim henüz desteklenmiyor. [BUG/1]
+* Kayıtlı kartlara erişim limitli olsa da, henüz imkansız durumda. (todo)
 * Proje 2021'de yapıldı, bazı yerlerde sıkıntılar, hatalar mevcut olabilir. Issues kısmından bildirebilirsiniz.
 * Proje, Trendyol Rest API'sini öğrenmek amacıyla yapıldı, bu library ile kötü anlamda yapabileceğin hiç bir şeyden ben sorumlu değilim.
 
